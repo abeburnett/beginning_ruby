@@ -1,5 +1,7 @@
+# analyzer.rb -- Text Analyzer
+
 # read the contents of a text file into an array
-lines = File.readlines("text.txt")
+lines = File.readlines(ARGV[0])
 
 # count the number of lines
 line_count = lines.size
@@ -22,6 +24,16 @@ sentence_count = text.split(/\.|\?|\!/).length
 # determine number of paragraphs
 paragraph_count = text.split(/\n\n/).length
 
+
+# summarize text
+sentences = text.gsub(/\s+/, ' ').strip.split(/\.|\?|\!/)
+sentences_sorted = sentences.sort_by { |sentence| sentence.length }
+one_third = sentences_sorted.length / 3
+ideal_sentences = sentences_sorted.slice(one_third, one_third + 1)
+ideal_sentences = ideal_sentences.select { |sentence| sentence =~ /is|are/ }
+
+
+
 puts "#{line_count} lines"
 puts "#{total_characters} characters"
 puts "#{total_characters_nospaces} characters excluding spaces"
@@ -42,3 +54,5 @@ word_count_nostopwords = keywords2.split.length
 
 puts "#{word_count_nostopwords} words (no stop words)"
 puts "#{((keywords.length.to_f / words.length.to_f) * 100).to_i} percent of non-stop words to all words"
+puts "Summary:\n\n" + ideal_sentences.join('. ')
+puts "-- End of analysis"
